@@ -252,3 +252,106 @@ git push
 * Always update submodules after pulling
 
 ---
+
+
+## ⚠️ Common Issue: Submodule Added Incorrectly
+
+### Problem
+
+If you try to add a submodule from an **empty repository**, you may see:
+
+```
+fatal: You are on a branch yet to be born
+```
+
+And later:
+
+```
+warning: adding embedded git repository
+```
+
+This means the repo was added as a **normal folder**, not a proper submodule.
+
+---
+
+### Why this happens
+
+Git submodules require the target repository to have **at least one commit**.
+
+---
+
+### Fix
+
+#### 1. Remove incorrect submodule
+
+```bash
+git rm --cached <folder>
+rm -rf <folder>
+rm -rf .git/modules/<folder>
+```
+
+---
+
+#### 2. Ensure remote repo has at least one commit
+
+Go to the repo and add a file (e.g., README.md):
+
+```bash
+git add .
+git commit -m "Initial commit"
+git push
+```
+
+---
+
+#### 3. Add submodule again
+
+```bash
+git submodule add <repo-url> <folder>
+```
+
+---
+
+### Example
+
+```bash
+git submodule add https://github.com/your-org/backend.git backend
+```
+
+---
+
+### Tip
+
+Always follow this order:
+
+1. Create repo
+2. Add initial commit
+3. Then add as submodule
+
+---
+
+## ⚠️ Another Issue: Submodule Already Exists Error
+
+### Error
+
+```
+fatal: A git directory for '<submodule>' is found locally
+```
+
+---
+
+### Fix
+
+Remove leftover Git metadata:
+
+```bash
+rm -rf .git/modules/<submodule>
+```
+
+Then re-add:
+
+```bash
+git submodule add <repo-url> <submodule>
+```
+
+---
